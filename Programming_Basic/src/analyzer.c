@@ -1,7 +1,7 @@
 /**
  * Author: 조민혁
  * Date: 2025/04/11
- * GitHub Link: 
+ * GitHub Link: https://github.com/Mindol7/WhiteHatSchool/tree/main/Programming_Basic/src
  */
 
 #include <stdio.h>
