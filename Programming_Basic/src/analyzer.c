@@ -20,28 +20,26 @@
 - ast.json -> ast.c
 */
 
-void count_func_num(json_value ext_obj);
-void print_func_return_type(json_value type_obj);
-void print_func_arg_var(json_value type_obj);
+void count_func_num(json_value node);
+void print_func_return_type(json_value node);
+void print_func_arg_var(json_value node);
 int count_func_if_num(json_value node);
 
 /* Count Function: Counting Function Number */
-void count_func_num(json_value ext_obj) {
+void count_func_num(json_value node) {
     int func_count = 1; // Default Function is main
     int if_count = 0;
-    int ext_len = json_len(ext_obj);
+    int ext_len = json_len(node);
     printf("============AST SYNTAX ANALYZE============\n");
     printf("Function (defined): main\n");
     for (int i = 0; i < ext_len; i++) {
-        json_value obj = json_get(ext_obj, i);
+        json_value obj = json_get(node, i);
         char *obj_nodetype = json_get_string(obj, "_nodetype");
-        
         if (obj_nodetype && strcmp(obj_nodetype, "FuncDef") == 0) {
             json_value decl = json_get(obj, "decl");
             char *func_name = json_get_string(decl, "name");
             json_value type = json_get(decl, "type");
             char *type_nodetype = json_get_string(type, "_nodetype");
-
             if (type_nodetype && strcmp(type_nodetype, "FuncDecl") == 0) {
                 printf("Function (defined): %s\n", func_name);
                 func_count++;
@@ -63,15 +61,15 @@ void count_func_num(json_value ext_obj) {
         }
     }
     
-    if_count += count_func_if_num(ext_obj);
+    if_count += count_func_if_num(node);
     printf("Total 'If' Count in ast.json: %d\n", if_count);
     printf("Total Function Count in ast.json: %d\n", func_count);
     printf("================================================\n");
 }
 
 /* Print Function: Return Type */
-void print_func_return_type(json_value type_obj) {
-    json_value type_type = json_get(type_obj, "type");
+void print_func_return_type(json_value node) {
+    json_value type_type = json_get(node, "type");
 
     char *nodetype_ptr = json_get_string(type_type, "_nodetype");
     
@@ -91,16 +89,16 @@ void print_func_return_type(json_value type_obj) {
         printf("Return Type: %s\n", return_);
     }
 
-    print_func_arg_var(type_obj);
+    print_func_arg_var(node);
 }
 
 /* Print Function: Argument Type and Variable Name */
-void print_func_arg_var(json_value type_obj) {
+void print_func_arg_var(json_value node) {
     int count = 1;
-    json_value args = json_get(type_obj, "args");
+    json_value args = json_get(node, "args");
 
     if(json_is_null(args)) {
-        json_value type_type = json_get(type_obj, "type");
+        json_value type_type = json_get(node, "type");
         json_value type_type_type = json_get(type_type, "type");
         json_value names_obj = json_get(type_type_type, "names");
         size_t names_len = json_len(names_obj);
